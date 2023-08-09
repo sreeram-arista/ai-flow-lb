@@ -83,7 +83,7 @@ struct Comm_v1 {
 
 // Plugin should define a global symbol: FlowExport_v1 flowExport_v1;
 struct FlowExport_v1 {
-   ncclResult_t ( *init )( const char hostname[], uint16_t port );
+   ncclResult_t ( *init )();
    ncclResult_t ( *exit )();
    ncclResult_t ( *exportFlow )( const Flow_v1 * flow );
    ncclResult_t ( *exportComm )( const Comm_v1 * comm );

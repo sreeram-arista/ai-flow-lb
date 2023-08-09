@@ -14,7 +14,7 @@
 char hostname[ 64 ];
 
 ncclResult_t
-init_v1( const char[], uint16_t ) {
+init_v1() {
    if ( gethostname( hostname, sizeof( hostname ) ) ) {
       perror( "gethostname() failed" );
       strcpy( hostname, "gpu???" );
