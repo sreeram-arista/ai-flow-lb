@@ -65,10 +65,13 @@ debug( FlowTrafficType_v1 type ) {
 }
 
 std::string
-debugIp( uint32_t ip ) {
-   return std::to_string( ( ip >> 24 ) & 0xff ) + "." +
-          std::to_string( ( ip >> 16 ) & 0xff ) + "." +
-          std::to_string( ( ip >> 8 ) & 0xff ) + "." + std::to_string( ip & 0xff );
+debugIp( const struct IpGenAddr & genAddr ) {
+   int addressFamily = genAddr.is_ipv4 ? AF_INET : AF_INET6;
+   char myAddr[ 41 ];
+   if( inet_ntop( addressFamily, &genAddr.addr, myAddr, 41 ) ) {
+      return std::string( myAddr );
+   }
+   return "Invalid";
 }
 
 std::string
@@ -84,7 +87,8 @@ exportFlow_v1( const Flow_v1 * flow ) {
              << " channel=" << flow->channel << " " << debug( flow->topology ) << " "
              << debug( flow->trafficType ) << " " << debugIp( flow->srcIp ) << ":"
              << flow->srcPort << " <-> " << debugIp( flow->dstIp ) << ":"
-             << flow->dstPort << " qPair=" << flow->qPair << "\n";
+             << flow->dstPort << " srcQPair=" << flow->srcQPair
+	     << " dstQPair=" << flow->destQPair << "\n";
    return ncclSuccess;
 }
 
