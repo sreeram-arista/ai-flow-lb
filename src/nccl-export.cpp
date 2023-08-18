@@ -65,13 +65,13 @@ debug( FlowTrafficType_v1 type ) {
 }
 
 std::string
-debugIp( const struct IpGenAddr & genAddr ) {
-   int addressFamily = genAddr.is_ipv4 ? AF_INET : AF_INET6;
-   char myAddr[ 41 ];
-   if( inet_ntop( addressFamily, &genAddr.addr, myAddr, 41 ) ) {
+debugIp( const struct IpGenAddr_v1 & genAddr ) {
+   int addressFamily = genAddr.isIpv4 ? AF_INET : AF_INET6;
+   char myAddr[ 48 ];
+   if ( inet_ntop( addressFamily, &genAddr.addr, myAddr, 48 ) ) {
       return std::string( myAddr );
    }
-   return "Invalid";
+   return "???";
 }
 
 std::string
@@ -82,22 +82,20 @@ rank( uint32_t rank ) {
 ncclResult_t
 exportFlow_v1( const Flow_v1 * flow ) {
    std::cout << hostname << ": FLOW 0x" << std::hex << flow->commHash << std::dec
-             << " " << debug( flow->direction ) << " src=" << flow->srcRank << ":"
-             << flow->srcLocalRank << " dst=" << flow->dstRank
-             << " channel=" << flow->channel << " " << debug( flow->topology ) << " "
-             << debug( flow->trafficType ) << " " << debugIp( flow->srcIp ) << ":"
-             << flow->srcPort << " <-> " << debugIp( flow->dstIp ) << ":"
-             << flow->dstPort << " srcQPair=" << flow->srcQPair
-	     << " dstQPair=" << flow->destQPair << "\n";
+             << " " << debug( flow->direction ) << " src=" << flow->srcRank
+             << " dst=" << flow->dstRank << " channel=" << flow->channel << " "
+             << debug( flow->topology ) << " " << debug( flow->trafficType ) << " "
+             << debugIp( flow->srcIp ) << ":" << flow->srcPort << " <-> "
+             << debugIp( flow->dstIp ) << ":" << flow->dstPort
+             << " srcQPair=" << flow->srcQPair << " dstQPair=" << flow->dstQPair
+             << "\n";
    return ncclSuccess;
 }
 
 ncclResult_t
 exportComm_v1( const Comm_v1 * comm ) {
    std::cout << hostname << ": COMM 0x" << std::hex << comm->commHash << std::dec
-             << " rank=" << comm->rank << ":" << comm->tpRank << "/" << comm->nRanks
-             << " localRank=" << comm->localRank << ":" << comm->tpLocalRank << "/"
-             << comm->nLocalRanks << " node=" << comm->node << "/" << comm->nNodes
+             << " rank=" << comm->tpRank << " node=" << comm->node
              << " channels=" << comm->nChannels << "\n";
    std::cout << hostname << ": RING 0x" << std::hex << comm->commHash << std::dec;
    for ( int i = 0; i < comm->nChannels; ++i ) {

@@ -5,8 +5,8 @@
 #ifndef CLB_API_H
 #define CLB_API_H
 
-#include <cstdint>
 #include <arpa/inet.h>
+#include <cstdint>
 
 extern "C" {
 
@@ -37,12 +37,12 @@ enum FlowTrafficType_v1 {
    ROCEv2,
 };
 
-struct IpGenAddr{
+struct IpGenAddr_v1 {
    union {
-      struct in_addr ipv4_addr;
-      struct in6_addr ipv6_addr;
+      struct in_addr ipv4Addr;
+      struct in6_addr ipv6Addr;
    } addr;
-   bool is_ipv4;
+   bool isIpv4;
 };
 
 struct Flow_v1 {
@@ -54,12 +54,12 @@ struct Flow_v1 {
    uint32_t channel;
    FlowTopology_v1 topology;
    FlowTrafficType_v1 trafficType;
-   struct IpGenAddr srcIp;
-   struct IpGenAddr dstIp;
+   struct IpGenAddr_v1 srcIp;
+   struct IpGenAddr_v1 dstIp;
    uint16_t srcPort;
    uint16_t dstPort;
    uint32_t srcQPair;
-   uint32_t destQPair;
+   uint32_t dstQPair;
 };
 
 struct RingNode_v1 {
